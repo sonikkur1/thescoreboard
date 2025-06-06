@@ -116,11 +116,11 @@ body {
   text-align: center;
 }
 
-.card-summary.income {
+.card-summary.win {
   color: #22c55e;
 }
 
-.card-summary.expense {
+.card-summary.loss {
   color: #ef4444;
 }
 
@@ -150,11 +150,11 @@ body {
   border-bottom: none;
 }
 
-.type-income {
+.type-win {
   color: #22c55e;
 }
 
-.type-expense {
+.type-loss {
   color: #ef4444;
 }
 

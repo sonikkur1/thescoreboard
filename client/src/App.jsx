@@ -4,7 +4,7 @@ import './App.css';
 
 function App() {
   const [transactions, setTransactions] = useState([]);
-  const [type, setType] = useState('income');
+  const [type, setType] = useState('win');
   const [amount, setAmount] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('');
@@ -47,7 +47,7 @@ function App() {
 
   const total = (cat) => {
     const list = filtered(cat);
-    return sum(list, 'income') - sum(list, 'expense');
+    return sum(list, 'win') - sum(list, 'loss');
   };
 
   const formatCurrency = (num) =>
@@ -77,8 +77,8 @@ function App() {
 
       <div className="summary-panel">
         <div className="card-summary">Total: {formatCurrency(total(category))}</div>
-        <div className="card-summary income">Income: {formatCurrency(sum(filtered(category), 'income'))}</div>
-        <div className="card-summary expense">Expense: {formatCurrency(sum(filtered(category), 'expense'))}</div>
+        <div className="card-summary win">Win: {formatCurrency(sum(filtered(category), 'win'))}</div>
+        <div className="card-summary loss">Loss: {formatCurrency(sum(filtered(category), 'loss'))}</div>
       </div>
 
       <div className="form-panel">
@@ -93,8 +93,8 @@ function App() {
           onChange={(e) => setDescription(e.target.value)}
         />
         <select value={type} onChange={(e) => setType(e.target.value)}>
-          <option value="income">Income</option>
-          <option value="expense">Expense</option>
+          <option value="win">Win</option>
+          <option value="loss">Loss</option>
         </select>
         <input
           type="number"
@@ -120,11 +120,11 @@ function App() {
             <tr key={tx._id}>
               <td>{tx.user}</td>
               <td>{tx.description}</td>
-              <td className={tx.type === 'income' ? 'type-income' : 'type-expense'}>
+              <td className={tx.type === 'win' ? 'type-win' : 'type-loss'}>
                 {tx.type.charAt(0).toUpperCase() + tx.type.slice(1)}
               </td>
-              <td className={tx.type === 'income' ? 'type-income' : 'type-expense'}>
-                {tx.type === 'income' ? '+' : '-'}{formatCurrency(tx.amount)}
+              <td className={tx.type === 'win' ? 'type-win' : 'type-loss'}>
+                {tx.type === 'win' ? '+' : '-'}{formatCurrency(tx.amount)}
               </td>
               <td>
                 <button className="delete-btn" onClick={() => handleDelete(tx._id)}>x</button>
