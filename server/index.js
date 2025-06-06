@@ -17,18 +17,18 @@ mongoose.connect(process.env.MONGO_URI, {
   console.error('MongoDB connection error:', err);
 });
 
-app.get('https://thescoreboard.onrender.com/api/transactions', async (req, res) => {
+app.get('/api/transactions', async (req, res) => {
   const transactions = await Transaction.find().sort({ createdAt: -1 });
   res.json(transactions);
 });
 
-app.post('https://thescoreboard.onrender.com/api/transactions', async (req, res) => {
+app.post('/api/transactions', async (req, res) => {
   const transaction = new Transaction(req.body);
   await transaction.save();
   res.json(transaction);
 });
 
-app.delete('https://thescoreboard.onrender.com/api/transactions/:id', async (req, res) => {
+app.delete('/api/transactions/:id', async (req, res) => {
   await Transaction.findByIdAndDelete(req.params.id);
   res.json({ success: true });
 });
