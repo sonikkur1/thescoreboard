@@ -1,0 +1,168 @@
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #0a0f1c;
+  color: #eaeaea;
+}
+
+.app-container {
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 1rem;
+}
+
+.header-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.view-title {
+  font-size: 2rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.selection-panel {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.card {
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 3rem;
+  border-radius: 20px;
+  backdrop-filter: blur(12px);
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  width: 200px;
+  height: 250px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.08);
+}
+
+.card h2 {
+  margin: 0;
+  font-size: 2rem;
+  color: #ffffff;
+}
+
+.card-btn {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.08);
+}
+
+.form-panel {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  background-color: #1e1e2f;
+  padding: 1rem;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+}
+
+.form-panel input,
+.form-panel select {
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  background-color: #2e2e3e;
+  color: #f5f5f5;
+  flex: 1;
+  min-width: 160px;
+}
+
+.summary-panel {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.card-summary {
+  flex: 1;
+  padding: 1rem;
+  border-radius: 20px;
+  background-color: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 1.1rem;
+  color: #eaeaea;
+  text-align: center;
+}
+
+.card-summary.income {
+  color: #22c55e;
+}
+
+.card-summary.expense {
+  color: #ef4444;
+}
+
+.transaction-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #1e1e2f;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.transaction-table th,
+.transaction-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #2e2e3e;
+  font-size: 1rem;
+}
+
+.transaction-table th {
+  background-color: #12121a;
+  font-weight: 600;
+  color: #ccc;
+}
+
+.transaction-table tr:last-child td {
+  border-bottom: none;
+}
+
+.type-income {
+  color: #22c55e;
+}
+
+.type-expense {
+  color: #ef4444;
+}
+
+.delete-btn {
+  background: none;
+  color: #ef4444;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0;
+}
