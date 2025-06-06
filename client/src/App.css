@@ -32,17 +32,20 @@ body {
 }
 
 .card {
-  background: #222;
-  color: white;
-  padding: 2rem;
-  text-align: center;
-  margin: 1rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 3rem;
+  border-radius: 0px;
+  backdrop-filter: blur(12px);
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  border-radius: 0; /* 👈 Make corners square */
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  width: 200px;
+  height: 250px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
-
 
 .card:hover {
   transform: scale(1.05);
@@ -102,14 +105,16 @@ body {
 }
 
 .card-summary {
-  background: #333;
-  color: white;
-  padding: 1rem 2rem;
-  margin: 0.5rem;
-  border-radius: 0; /* 👈 Make corners square */
-  box-shadow: 0 0 8px rgba(255, 255, 255, 0.05);
+  flex: 1;
+  padding: 1rem;
+  border-radius: 0px;
+  background-color: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 1.1rem;
+  color: #eaeaea;
+  text-align: center;
 }
-
 
 .card-summary.win {
   color: #22c55e;
