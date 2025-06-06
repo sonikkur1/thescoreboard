@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/api': 'https://thescoreboard.onrender.com'
+      '/api': 'http://localhost:5000'
     }
   }
 });
