@@ -16,14 +16,14 @@ function App() {
   }, []);
 
   const fetchTransactions = async () => {
-    const res = await axios.get('/api/transactions');
+    const res = await axios.get('https://thescoreboard.onrender.com/api/transactions');
     setTransactions(res.data);
   };
 
   const handleAdd = async () => {
     if (!amount || !description || !type || !category || !user) return;
     const newTx = { type, amount, description, category, user };
-    await axios.post('/api/transactions', newTx);
+    await axios.post('https://thescoreboard.onrender.com/api/transactions', newTx);
     fetchTransactions();
     setAmount('');
     setDescription('');
@@ -32,7 +32,7 @@ function App() {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`/api/transactions/${id}`);
+      await axios.delete(`https://thescoreboard.onrender.com/api/transactions/${id}`);
       fetchTransactions();
     } catch (err) {
       console.error('Failed to delete transaction:', err);
