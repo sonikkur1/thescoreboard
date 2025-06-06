@@ -1,3 +1,4 @@
+// server.js
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -8,7 +9,11 @@ const transactionsRouter = require('./routes/transactions');
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: ['https://tradingboard.netlify.app/', 'http://localhost:5173'],
+  methods: ['GET', 'POST', 'DELETE'],
+  credentials: true,
+}));
 app.use(express.json());
 
 // Routes

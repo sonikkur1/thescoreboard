@@ -1,6 +1,11 @@
+// App.jsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './App.css';
+
+const API_BASE = import.meta.env.PROD
+  ? 'https://thescoreboard.onrender.com/api'
+  : '/api';
 
 function App() {
   const [transactions, setTransactions] = useState([]);
@@ -16,23 +21,31 @@ function App() {
   }, []);
 
   const fetchTransactions = async () => {
-    const res = await axios.get('/api/transactions');
-    setTransactions(res.data);
+    try {
+      const res = await axios.get(`${API_BASE}/transactions`);
+      setTransactions(res.data);
+    } catch (err) {
+      console.error('Error fetching transactions:', err);
+    }
   };
 
   const handleAdd = async () => {
     if (!amount || !description || !type || !category || !user) return;
     const newTx = { type, amount, description, category, user };
-    await axios.post('/api/transactions', newTx);
-    fetchTransactions();
-    setAmount('');
-    setDescription('');
-    setUser('Kevin');
+    try {
+      await axios.post(`${API_BASE}/transactions`, newTx);
+      fetchTransactions();
+      setAmount('');
+      setDescription('');
+      setUser('Kevin');
+    } catch (err) {
+      console.error('Error adding transaction:', err);
+    }
   };
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`/api/transactions/${id}`);
+      await axios.delete(`${API_BASE}/transactions/${id}`);
       fetchTransactions();
     } catch (err) {
       console.error('Failed to delete transaction:', err);
