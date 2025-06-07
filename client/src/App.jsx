@@ -115,9 +115,11 @@ function App() {
 
   return (
     <div className="app-container">
-      <div className="header-row">
-        <button className="card-btn" onClick={() => setView('select')}>Back</button>
-        <h1 className="view-title">{category}</h1>
+      <div className="navbar">
+        <button className="back-btn" onClick={() => setView('select')}>Back</button>
+        <h1 className="navbar-title">
+          TradingBoard{view === 'Paper' ? ' Paper' : view === 'Fiat' ? ' Fiat' : ''}
+        </h1>
       </div>
 
       <div className="summary-panel">
