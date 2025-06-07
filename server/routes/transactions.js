@@ -1,9 +1,8 @@
-// routes/transactions.js
 const express = require('express');
 const router = express.Router();
 const Transaction = require('../models/Transaction');
 
-// Get all transactions
+// GET all transactions
 router.get('/', async (req, res) => {
   try {
     const transactions = await Transaction.find().sort({ createdAt: -1 });
@@ -13,18 +12,39 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Add a new transaction
+// POST a new transaction
 router.post('/', async (req, res) => {
+  const { user, description, entry, exit, amount, category } = req.body;
+
+  if (
+    typeof user !== 'string' ||
+    typeof description !== 'string' ||
+    typeof category !== 'string' ||
+    isNaN(entry) ||
+    isNaN(exit) ||
+    isNaN(amount)
+  ) {
+    return res.status(400).json({ error: 'Invalid input data' });
+  }
+
   try {
-    const transaction = new Transaction(req.body);
-    await transaction.save();
-    res.json(transaction);
+    const newTransaction = new Transaction({
+      user,
+      description,
+      entry: parseFloat(entry),
+      exit: parseFloat(exit),
+      amount: parseFloat(amount),
+      category,
+    });
+
+    await newTransaction.save();
+    res.status(201).json(newTransaction);
   } catch (err) {
-    res.status(500).json({ error: 'Failed to add transaction' });
+    res.status(500).json({ error: 'Failed to save transaction' });
   }
 });
 
-// Delete a transaction
+// DELETE a transaction by ID
 router.delete('/:id', async (req, res) => {
   try {
     await Transaction.findByIdAndDelete(req.params.id);
