@@ -1,6 +1,11 @@
+// App.jsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './App.css';
+
+const API_BASE = import.meta.env.PROD
+  ? 'https://thescoreboard.onrender.com/api'
+  : '/api';
 
 function App() {
   const [transactions, setTransactions] = useState([]);
@@ -16,30 +21,31 @@ function App() {
   }, []);
 
   const fetchTransactions = async () => {
-    const res = await axios.get('/api/transactions');
-    setTransactions(res.data);
+    try {
+      const res = await axios.get(`${API_BASE}/transactions`);
+      setTransactions(res.data);
+    } catch (err) {
+      console.error('Error fetching transactions:', err);
+    }
   };
 
   const handleAdd = async () => {
     if (!amount || !description || !type || !category || !user) return;
-    const newTx = {
-      type,
-      amount,
-      description,
-      category,
-      user,
-      createdAt: new Date().toISOString()
-    };
-    await axios.post('/api/transactions', newTx);
-    fetchTransactions();
-    setAmount('');
-    setDescription('');
-    setUser('Kevin');
+    const newTx = { type, amount, description, category, user };
+    try {
+      await axios.post(`${API_BASE}/transactions`, newTx);
+      fetchTransactions();
+      setAmount('');
+      setDescription('');
+      setUser('Kevin');
+    } catch (err) {
+      console.error('Error adding transaction:', err);
+    }
   };
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`/api/transactions/${id}`);
+      await axios.delete(`${API_BASE}/transactions/${id}`);
       fetchTransactions();
     } catch (err) {
       console.error('Failed to delete transaction:', err);
@@ -60,39 +66,26 @@ function App() {
   const formatCurrency = (num) =>
     '$' + Number(num).toLocaleString();
 
-  const formatDate = (iso) => {
-    const d = new Date(iso);
-    return d.toLocaleString(); // Adjust as needed
-  };
-
-  const userStats = () => {
-    const list = filtered(category);
-    const grandTotal = total(category);
-    const users = ['Kevin', 'Addison'];
-    return users.map(u => {
-      const uList = list.filter(tx => tx.user === u);
-      const uWin = sum(uList, 'win');
-      const uLoss = sum(uList, 'loss');
-      const uTotal = uWin - uLoss;
-      const percentage = grandTotal ? ((uTotal / grandTotal) * 100).toFixed(1) + '%' : '0%';
-      return { user: u, win: uWin, loss: uLoss, total: uTotal, percentage };
-    });
-  };
-
   if (view === 'select') {
     return (
       <div className="app-container">
         <div className="selection-panel">
-          <div className="card square" onClick={() => { setCategory('Paper'); setView('Paper'); }}>
+          <div className="card" onClick={() => { setCategory('Paper'); setView('Paper'); }}>
             <h2>Paper</h2>
           </div>
-          <div className="card square" onClick={() => { setCategory('Fiat'); setView('Fiat'); }}>
+          <div className="card" onClick={() => { setCategory('Fiat'); setView('Fiat'); }}>
             <h2>Fiat</h2>
           </div>
         </div>
       </div>
     );
   }
+
+  const formatDate = (isoString) => {
+    const date = new Date(isoString);
+    return date.toLocaleString(); // or .toLocaleDateString() for just the date
+  };
+
 
   return (
     <div className="app-container">
@@ -102,9 +95,9 @@ function App() {
       </div>
 
       <div className="summary-panel">
-        <div className="card-summary square">Total: {formatCurrency(total(category))}</div>
-        <div className="card-summary win square">Win: {formatCurrency(sum(filtered(category), 'win'))}</div>
-        <div className="card-summary loss square">Loss: {formatCurrency(sum(filtered(category), 'loss'))}</div>
+        <div className="card-summary">Total: {formatCurrency(total(category))}</div>
+        <div className="card-summary win">Win: {formatCurrency(sum(filtered(category), 'win'))}</div>
+        <div className="card-summary loss">Loss: {formatCurrency(sum(filtered(category), 'loss'))}</div>
       </div>
 
       <div className="form-panel">
@@ -138,8 +131,8 @@ function App() {
             <th>Description</th>
             <th>Type</th>
             <th>Amount</th>
-            <th>Date/Time</th>
-            <th></th>
+            <th>Date</th> {/* New Column */}
+            <th></th> {/* Delete button column */}
           </tr>
         </thead>
         <tbody>
@@ -153,7 +146,7 @@ function App() {
               <td className={tx.type === 'win' ? 'type-win' : 'type-loss'}>
                 {tx.type === 'win' ? '+' : '-'}{formatCurrency(tx.amount)}
               </td>
-              <td>{formatDate(tx.createdAt)}</td>
+              <td>{formatDate(tx.createdAt)}</td> {/* Display Date */}
               <td>
                 <button className="delete-btn" onClick={() => handleDelete(tx._id)}>x</button>
               </td>
@@ -162,29 +155,38 @@ function App() {
         </tbody>
       </table>
 
-      <h3 className="user-summary-title">User Breakdown</h3>
-      <table className="transaction-table">
-        <thead>
-          <tr>
-            <th>User</th>
-            <th>Win</th>
-            <th>Loss</th>
-            <th>Total</th>
-            <th>Percentage</th>
-          </tr>
-        </thead>
-        <tbody>
-          {userStats().map((stat) => (
-            <tr key={stat.user}>
-              <td>{stat.user}</td>
-              <td>{formatCurrency(stat.win)}</td>
-              <td>{formatCurrency(stat.loss)}</td>
-              <td>{formatCurrency(stat.total)}</td>
-              <td>{stat.percentage}</td>
+      <h2 style={{ marginTop: '2rem' }}>User Breakdown</h2>
+        <table className="transaction-table">
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Win</th>
+              <th>Loss</th>
+              <th>Total</th>
+              <th>Percentage</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {['Kevin', 'Addison'].map((u) => {
+              const userTx = transactions.filter(tx => tx.category === category && tx.user === u);
+              const winSum = sum(userTx, 'win');
+              const lossSum = sum(userTx, 'loss');
+              const netTotal = winSum - lossSum;
+              const categoryTotal = total(category);
+              const percentage = categoryTotal === 0 ? 0 : ((netTotal / categoryTotal) * 100).toFixed(1);
+
+              return (
+                <tr key={u}>
+                  <td>{u}</td>
+                  <td className="type-win">{formatCurrency(winSum)}</td>
+                  <td className="type-loss">{formatCurrency(lossSum)}</td>
+                  <td>{formatCurrency(netTotal)}</td>
+                  <td>{percentage}%</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
     </div>
   );
 }
