@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const Transaction = require('../models/Transaction');
 
-// GET all transactions
 router.get('/', async (req, res) => {
   try {
     const transactions = await Transaction.find().sort({ createdAt: -1 });
@@ -12,43 +11,47 @@ router.get('/', async (req, res) => {
   }
 });
 
-// POST a new transaction
 router.post('/', async (req, res) => {
-  const { user, description, entry, exit, amount, category } = req.body;
-
-  if (
-    typeof user !== 'string' ||
-    typeof description !== 'string' ||
-    typeof category !== 'string' ||
-    isNaN(entry) ||
-    isNaN(exit) ||
-    isNaN(amount)
-  ) {
-    return res.status(400).json({ error: 'Invalid input data' });
-  }
-
   try {
+    const { user, description, entry, exit, amount, category } = req.body;
+
+    if (
+      !user || !description || entry == null || exit == null || amount == null || !category
+    ) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    const entryNum = parseFloat(entry);
+    const exitNum = parseFloat(exit);
+    const amountNum = parseFloat(amount);
+    const returnAmount = ((exitNum - entryNum) / entryNum) * amountNum;
+    const percentage = ((exitNum - entryNum) / entryNum) * 100;
+    const result = returnAmount >= 0 ? 'win' : 'loss';
+
     const newTransaction = new Transaction({
       user,
       description,
-      entry: parseFloat(entry),
-      exit: parseFloat(exit),
-      amount: parseFloat(amount),
+      entry: entryNum,
+      exit: exitNum,
+      amount: amountNum,
+      returnAmount,
+      percentage,
+      result,
       category,
     });
 
-    await newTransaction.save();
-    res.status(201).json(newTransaction);
+    const saved = await newTransaction.save();
+    res.status(201).json(saved);
   } catch (err) {
-    res.status(500).json({ error: 'Failed to save transaction' });
+    console.error(err);
+    res.status(500).json({ error: 'Failed to create transaction' });
   }
 });
 
-// DELETE a transaction by ID
 router.delete('/:id', async (req, res) => {
   try {
     await Transaction.findByIdAndDelete(req.params.id);
-    res.json({ success: true });
+    res.json({ message: 'Deleted' });
   } catch (err) {
     res.status(500).json({ error: 'Failed to delete transaction' });
   }
