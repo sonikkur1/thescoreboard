@@ -8,18 +8,18 @@ const transactionsRouter = require('./routes/transactions');
 
 const app = express();
 
-// Middleware
+// ✅ Middleware
 app.use(cors({
-  origin: ['https://tradingboard.netlify.app/', 'http://localhost:5173'],
+  origin: ['https://tradingboard.netlify.app', 'http://localhost:5173'], // ⬅️ No trailing slash
   methods: ['GET', 'POST', 'DELETE'],
   credentials: true,
 }));
 app.use(express.json());
 
-// Routes
+// ✅ Routes
 app.use('/api/transactions', transactionsRouter);
 
-// Connect to MongoDB and start server
+// ✅ Connect to MongoDB and start server
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
