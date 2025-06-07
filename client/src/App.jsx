@@ -34,7 +34,7 @@ function App() {
 
   const handleAdd = async () => {
     if (!amount || !description || !type || !category || !user) return;
-    const newTx = { type, amount, description, category, user };
+    const newTx = { user, description, entry, exit, amount };
     try {
       await axios.post(`${API_BASE}/transactions`, newTx);
       fetchTransactions();
@@ -120,13 +120,21 @@ function App() {
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
-        <select value={type} onChange={(e) => setType(e.target.value)}>
-          <option value="win">Win</option>
-          <option value="loss">Loss</option>
-        </select>
         <input
           type="number"
-          placeholder="Amount"
+          placeholder="Entry Price"
+          value={entry}
+          onChange={(e) => setEntry(e.target.value)}
+        />
+        <input
+          type="number"
+          placeholder="Exit Price"
+          value={exit}
+          onChange={(e) => setExit(e.target.value)}
+        />
+        <input
+          type="number"
+          placeholder="Amount ($)"
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
         />
@@ -138,29 +146,42 @@ function App() {
           <tr>
             <th>User</th>
             <th>Description</th>
-            <th>Type</th>
-            <th>Amount</th>
+            <th>Result</th>
+            <th>Return</th>
+            <th>Percentage</th>
             <th>Date/Time</th>
             <th></th>
           </tr>
         </thead>
         <tbody>
-          {paginatedTransactions.map((tx) => (
-            <tr key={tx._id}>
-              <td>{tx.user}</td>
-              <td>{tx.description}</td>
-              <td className={tx.type === 'win' ? 'type-win' : 'type-loss'}>
-                {tx.type.charAt(0).toUpperCase() + tx.type.slice(1)}
-              </td>
-              <td className={tx.type === 'win' ? 'type-win' : 'type-loss'}>
-                {tx.type === 'win' ? '+' : '-'}{formatCurrency(tx.amount)}
-              </td>
-              <td>{formatDate(tx.createdAt)}</td> {/* Display Date */}
-              <td>
-                <button className="delete-btn" onClick={() => handleDelete(tx._id)}>x</button>
-              </td>
-            </tr>
-          ))}
+          {paginatedTransactions.map((tx) => {
+            const entry = Number(tx.entry);
+            const exit = Number(tx.exit);
+            const amount = Number(tx.amount);
+            const isWin = exit > entry;
+            const percentageChange = ((exit - entry) / entry) * 100;
+            const returnAmount = (percentageChange / 100) * amount;
+
+            return (
+              <tr key={tx._id}>
+                <td>{tx.user}</td>
+                <td>{tx.description}</td>
+                <td className={isWin ? 'type-win' : 'type-loss'}>
+                  {isWin ? 'Win' : 'Loss'}
+                </td>
+                <td className={isWin ? 'type-win' : 'type-loss'}>
+                  {(isWin ? '+' : '-') + formatCurrency(Math.abs(returnAmount))}
+                </td>
+                <td className={isWin ? 'type-win' : 'type-loss'}>
+                  {(isWin ? '+' : '-') + Math.abs(percentageChange).toFixed(1) + '%'}
+                </td>
+                <td>{formatDate(tx.createdAt)}</td>
+                <td>
+                  <button className="delete-btn" onClick={() => handleDelete(tx._id)}>x</button>
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
       <div className="pagination">
@@ -214,7 +235,7 @@ function App() {
               <th>Win</th>
               <th>Loss</th>
               <th>Total</th>
-              <th>Percentage</th>
+              <th>Share</th>
             </tr>
           </thead>
           <tbody>

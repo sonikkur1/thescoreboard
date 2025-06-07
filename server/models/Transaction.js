@@ -1,11 +1,12 @@
 const mongoose = require('mongoose');
 
 const transactionSchema = new mongoose.Schema({
-  type: String,
-  amount: Number,
-  description: String,
-  category: String,
   user: String,
-}, { timestamps: true }); // ⬅️ This adds `createdAt` automatically
+  description: String,
+  entry: Number,
+  exit: Number,
+  amount: Number,
+  category: String,
+}, { timestamps: true });
 
 module.exports = mongoose.model('Transaction', transactionSchema);
