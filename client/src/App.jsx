@@ -1,4 +1,3 @@
-// App.jsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './App.css';
@@ -9,7 +8,8 @@ const API_BASE = import.meta.env.PROD
 
 function App() {
   const [transactions, setTransactions] = useState([]);
-  const [type, setType] = useState('win');
+  const [entry, setEntry] = useState('');
+  const [exit, setExit] = useState('');
   const [amount, setAmount] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('');
@@ -17,7 +17,6 @@ function App() {
   const [view, setView] = useState('select');
   const ITEMS_PER_PAGE = 7;
   const [currentPage, setCurrentPage] = useState(1);
-
 
   useEffect(() => {
     fetchTransactions();
@@ -33,11 +32,32 @@ function App() {
   };
 
   const handleAdd = async () => {
-    if (!amount || !description || !type || !category || !user) return;
-    const newTx = { user, description, entry, exit, amount };
+    if (!entry || !exit || !amount || !description || !category || !user) return;
+
+    const entryNum = parseFloat(entry);
+    const exitNum = parseFloat(exit);
+    const amountNum = parseFloat(amount);
+    const returnAmount = ((exitNum - entryNum) / entryNum) * amountNum;
+    const percentage = ((exitNum - entryNum) / entryNum) * 100;
+    const result = returnAmount >= 0 ? 'win' : 'loss';
+
+    const newTx = {
+      entry: entryNum,
+      exit: exitNum,
+      amount: amountNum,
+      description,
+      category,
+      user,
+      result,
+      returnAmount,
+      percentage
+    };
+
     try {
       await axios.post(`${API_BASE}/transactions`, newTx);
       fetchTransactions();
+      setEntry('');
+      setExit('');
       setAmount('');
       setDescription('');
       setUser('Kevin');
@@ -55,19 +75,19 @@ function App() {
     }
   };
 
-  const filtered = (cat) =>
-    transactions.filter((tx) => tx.category === cat);
+  const filtered = (cat) => transactions.filter((tx) => tx.category === cat);
 
-  const sum = (list, type) =>
-    list.filter(tx => tx.type === type).reduce((acc, tx) => acc + Number(tx.amount), 0);
+  const sum = (list, resultType) =>
+    list
+      .filter((tx) => tx.result === resultType)
+      .reduce((acc, tx) => acc + Number(tx.returnAmount), 0);
 
   const total = (cat) => {
     const list = filtered(cat);
-    return sum(list, 'win') - sum(list, 'loss');
+    return sum(list, 'win') + sum(list, 'loss');
   };
 
-  const formatCurrency = (num) =>
-    '$' + Number(num).toLocaleString();
+  const formatCurrency = (num) => '$' + Number(num).toFixed(2);
 
   if (view === 'select') {
     return (
@@ -84,17 +104,14 @@ function App() {
     );
   }
 
-  const formatDate = (isoString) => {
-    const date = new Date(isoString);
-    return date.toLocaleString(); // or .toLocaleDateString() for just the date
-  };
+  const formatDate = (isoString) => new Date(isoString).toLocaleString();
 
   const filteredTransactions = filtered(category);
-    const totalPages = Math.ceil(filteredTransactions.length / ITEMS_PER_PAGE);
-    const paginatedTransactions = filteredTransactions.slice(
-      (currentPage - 1) * ITEMS_PER_PAGE,
-      currentPage * ITEMS_PER_PAGE
-    );
+  const totalPages = Math.ceil(filteredTransactions.length / ITEMS_PER_PAGE);
+  const paginatedTransactions = filteredTransactions.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
 
   return (
     <div className="app-container">
@@ -122,19 +139,19 @@ function App() {
         />
         <input
           type="number"
-          placeholder="Entry Price"
+          placeholder="Entry"
           value={entry}
           onChange={(e) => setEntry(e.target.value)}
         />
         <input
           type="number"
-          placeholder="Exit Price"
+          placeholder="Exit"
           value={exit}
           onChange={(e) => setExit(e.target.value)}
         />
         <input
           type="number"
-          placeholder="Amount ($)"
+          placeholder="Amount"
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
         />
@@ -154,46 +171,33 @@ function App() {
           </tr>
         </thead>
         <tbody>
-          {paginatedTransactions.map((tx) => {
-            const entry = Number(tx.entry);
-            const exit = Number(tx.exit);
-            const amount = Number(tx.amount);
-            const isWin = exit > entry;
-            const percentageChange = ((exit - entry) / entry) * 100;
-            const returnAmount = (percentageChange / 100) * amount;
-
-            return (
-              <tr key={tx._id}>
-                <td>{tx.user}</td>
-                <td>{tx.description}</td>
-                <td className={isWin ? 'type-win' : 'type-loss'}>
-                  {isWin ? 'Win' : 'Loss'}
-                </td>
-                <td className={isWin ? 'type-win' : 'type-loss'}>
-                  {(isWin ? '+' : '-') + formatCurrency(Math.abs(returnAmount))}
-                </td>
-                <td className={isWin ? 'type-win' : 'type-loss'}>
-                  {(isWin ? '+' : '-') + Math.abs(percentageChange).toFixed(1) + '%'}
-                </td>
-                <td>{formatDate(tx.createdAt)}</td>
-                <td>
-                  <button className="delete-btn" onClick={() => handleDelete(tx._id)}>x</button>
-                </td>
-              </tr>
-            );
-          })}
+          {paginatedTransactions.map((tx) => (
+            <tr key={tx._id}>
+              <td>{tx.user}</td>
+              <td>{tx.description}</td>
+              <td className={tx.result === 'win' ? 'type-win' : 'type-loss'}>
+                {tx.result.charAt(0).toUpperCase() + tx.result.slice(1)}
+              </td>
+              <td className={tx.result === 'win' ? 'type-win' : 'type-loss'}>
+                {tx.result === 'win' ? '+' : '-'}{formatCurrency(Math.abs(tx.returnAmount))}
+              </td>
+              <td className={tx.result === 'win' ? 'type-win' : 'type-loss'}>
+                {tx.percentage >= 0 ? '+' : ''}{tx.percentage.toFixed(2)}%
+              </td>
+              <td>{formatDate(tx.createdAt)}</td>
+              <td>
+                <button className="delete-btn" onClick={() => handleDelete(tx._id)}>x</button>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
+
       <div className="pagination">
         {totalPages > 1 && (
           <>
-            {currentPage > 3 && (
-              <button onClick={() => setCurrentPage(1)}>First</button>
-            )}
-            {currentPage > 1 && (
-              <button onClick={() => setCurrentPage(currentPage - 1)}>Previous</button>
-            )}
-
+            {currentPage > 3 && <button onClick={() => setCurrentPage(1)}>First</button>}
+            {currentPage > 1 && <button onClick={() => setCurrentPage(currentPage - 1)}>Previous</button>}
             {Array.from({ length: totalPages }, (_, i) => i + 1)
               .filter((page) => {
                 if (totalPages <= 5) return true;
@@ -202,8 +206,7 @@ function App() {
                 return false;
               })
               .map((page, index, arr) => {
-                const isGap =
-                  index > 0 && page - arr[index - 1] > 1;
+                const isGap = index > 0 && page - arr[index - 1] > 1;
                 return isGap ? (
                   <span key={`gap-${index}`} className="gap">...</span>
                 ) : (
@@ -216,49 +219,44 @@ function App() {
                   </button>
                 );
               })}
-
-            {currentPage < totalPages && (
-              <button onClick={() => setCurrentPage(currentPage + 1)}>Next</button>
-            )}
-            {currentPage < totalPages - 2 && (
-              <button onClick={() => setCurrentPage(totalPages)}>Last</button>
-            )}
+            {currentPage < totalPages && <button onClick={() => setCurrentPage(currentPage + 1)}>Next</button>}
+            {currentPage < totalPages - 2 && <button onClick={() => setCurrentPage(totalPages)}>Last</button>}
           </>
         )}
       </div>
 
       <h2 style={{ marginTop: '2rem' }}>User Breakdown</h2>
-        <table className="transaction-table">
-          <thead>
-            <tr>
-              <th>User</th>
-              <th>Win</th>
-              <th>Loss</th>
-              <th>Total</th>
-              <th>Share</th>
-            </tr>
-          </thead>
-          <tbody>
-            {['Kevin', 'Addison'].map((u) => {
-              const userTx = transactions.filter(tx => tx.category === category && tx.user === u);
-              const winSum = sum(userTx, 'win');
-              const lossSum = sum(userTx, 'loss');
-              const netTotal = winSum - lossSum;
-              const categoryTotal = total(category);
-              const percentage = categoryTotal === 0 ? 0 : ((netTotal / categoryTotal) * 100).toFixed(1);
+      <table className="transaction-table">
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>Win</th>
+            <th>Loss</th>
+            <th>Total</th>
+            <th>Share</th>
+          </tr>
+        </thead>
+        <tbody>
+          {['Kevin', 'Addison'].map((u) => {
+            const userTx = transactions.filter(tx => tx.category === category && tx.user === u);
+            const winSum = sum(userTx, 'win');
+            const lossSum = sum(userTx, 'loss');
+            const netTotal = winSum + lossSum;
+            const categoryTotal = total(category);
+            const share = categoryTotal === 0 ? 0 : ((netTotal / categoryTotal) * 100).toFixed(1);
 
-              return (
-                <tr key={u}>
-                  <td>{u}</td>
-                  <td>{formatCurrency(winSum)}</td>
-                  <td>{formatCurrency(lossSum)}</td>
-                  <td>{formatCurrency(netTotal)}</td>
-                  <td>{percentage}%</td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+            return (
+              <tr key={u}>
+                <td>{u}</td>
+                <td>{formatCurrency(winSum)}</td>
+                <td>{formatCurrency(lossSum)}</td>
+                <td>{formatCurrency(netTotal)}</td>
+                <td>{share}%</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
     </div>
   );
 }
