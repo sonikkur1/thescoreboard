@@ -15,6 +15,9 @@ function App() {
   const [category, setCategory] = useState('');
   const [user, setUser] = useState('Kevin');
   const [view, setView] = useState('select');
+  const ITEMS_PER_PAGE = 7;
+  const [currentPage, setCurrentPage] = useState(1);
+
 
   useEffect(() => {
     fetchTransactions();
@@ -86,6 +89,12 @@ function App() {
     return date.toLocaleString(); // or .toLocaleDateString() for just the date
   };
 
+  const filteredTransactions = filtered(category);
+    const totalPages = Math.ceil(filteredTransactions.length / ITEMS_PER_PAGE);
+    const paginatedTransactions = filteredTransactions.slice(
+      (currentPage - 1) * ITEMS_PER_PAGE,
+      currentPage * ITEMS_PER_PAGE
+    );
 
   return (
     <div className="app-container">
@@ -136,7 +145,7 @@ function App() {
           </tr>
         </thead>
         <tbody>
-          {filtered(category).map((tx) => (
+          {paginatedTransactions.map((tx) => (
             <tr key={tx._id}>
               <td>{tx.user}</td>
               <td>{tx.description}</td>
@@ -154,6 +163,48 @@ function App() {
           ))}
         </tbody>
       </table>
+      <div className="pagination">
+        {totalPages > 1 && (
+          <>
+            {currentPage > 3 && (
+              <button onClick={() => setCurrentPage(1)}>First</button>
+            )}
+            {currentPage > 1 && (
+              <button onClick={() => setCurrentPage(currentPage - 1)}>Previous</button>
+            )}
+
+            {Array.from({ length: totalPages }, (_, i) => i + 1)
+              .filter((page) => {
+                if (totalPages <= 5) return true;
+                if (page === 1 || page === totalPages) return true;
+                if (Math.abs(page - currentPage) <= 2) return true;
+                return false;
+              })
+              .map((page, index, arr) => {
+                const isGap =
+                  index > 0 && page - arr[index - 1] > 1;
+                return isGap ? (
+                  <span key={`gap-${index}`} className="gap">...</span>
+                ) : (
+                  <button
+                    key={page}
+                    onClick={() => setCurrentPage(page)}
+                    className={currentPage === page ? 'active' : ''}
+                  >
+                    {page}
+                  </button>
+                );
+              })}
+
+            {currentPage < totalPages && (
+              <button onClick={() => setCurrentPage(currentPage + 1)}>Next</button>
+            )}
+            {currentPage < totalPages - 2 && (
+              <button onClick={() => setCurrentPage(totalPages)}>Last</button>
+            )}
+          </>
+        )}
+      </div>
 
       <h2 style={{ marginTop: '2rem' }}>User Breakdown</h2>
         <table className="transaction-table">

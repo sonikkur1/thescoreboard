@@ -166,3 +166,31 @@ body {
   cursor: pointer;
   padding: 0;
 }
+
+.pagination {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.pagination button {
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  background: white;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.pagination button.active {
+  background-color: #444;
+  color: white;
+  font-weight: bold;
+}
+
+.pagination .gap {
+  padding: 6px 10px;
+  color: #999;
+}
+
