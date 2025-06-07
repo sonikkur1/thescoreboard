@@ -1,132 +1,168 @@
 body {
   margin: 0;
-  background-color: #111;
-  color: white;
-  font-family: 'Arial', sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #0a0f1c;
+  color: #eaeaea;
 }
 
 .app-container {
-  padding: 2rem;
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 1rem;
+}
+
+.header-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.view-title {
+  font-size: 2rem;
+  font-weight: 600;
+  margin: 0;
 }
 
 .selection-panel {
   display: flex;
   justify-content: center;
   gap: 2rem;
+  margin-top: 2rem;
 }
 
 .card {
-  background: rgba(255, 255, 255, 0.05);
-  padding: 2rem 4rem;
-  border-radius: 1rem;
-  text-align: center;
-  backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 3rem;
+  border-radius: 0px;
+  backdrop-filter: blur(12px);
   cursor: pointer;
-  transition: transform 0.3s ease, background 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  width: 200px;
+  height: 250px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .card:hover {
   transform: scale(1.05);
-  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.08);
 }
 
-.card-summary {
-  background: rgba(255, 255, 255, 0.05);
-  padding: 1rem 2rem;
-  border-radius: 1rem;
-  margin: 0.5rem;
-  display: inline-block;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.card-summary.win {
-  border-left: 4px solid #6fcf97;
-}
-
-.card-summary.loss {
-  border-left: 4px solid #eb5757;
-}
-
-.summary-panel {
-  display: flex;
-  justify-content: start;
-  gap: 1rem;
-  margin-bottom: 2rem;
+.card h2 {
+  margin: 0;
+  font-size: 2rem;
+  color: #ffffff;
 }
 
 .card-btn {
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
-  padding: 0.5rem 1.2rem;
-  border: none;
-  border-radius: 0.5rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
   cursor: pointer;
-  transition: background 0.3s ease;
+  backdrop-filter: blur(10px);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .card-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
-}
-
-.view-title {
-  margin-left: 1rem;
-}
-
-.header-row {
-  display: flex;
-  align-items: center;
-  margin-bottom: 1rem;
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.08);
 }
 
 .form-panel {
-  margin-bottom: 2rem;
   display: flex;
-  gap: 1rem;
   flex-wrap: wrap;
+  gap: 1rem;
+  background-color: #1e1e2f;
+  padding: 1rem;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
 }
 
 .form-panel input,
 .form-panel select {
-  padding: 0.5rem;
-  background: #222;
-  color: white;
-  border: 1px solid #444;
-  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  background-color: #2e2e3e;
+  color: #f5f5f5;
+  flex: 1;
+  min-width: 160px;
+}
+
+.summary-panel {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.card-summary {
+  flex: 1;
+  padding: 1rem;
+  border-radius: 0px;
+  background-color: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 1.1rem;
+  color: #eaeaea;
+  text-align: center;
+}
+
+.card-summary.win {
+  color: #22c55e;
+}
+
+.card-summary.loss {
+  color: #ef4444;
 }
 
 .transaction-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 1rem;
+  background-color: #1e1e2f;
+  border-radius: 12px;
+  overflow: hidden;
 }
 
 .transaction-table th,
 .transaction-table td {
-  padding: 0.75rem;
-  border-bottom: 1px solid #333;
+  padding: 1rem;
   text-align: left;
+  border-bottom: 1px solid #2e2e3e;
+  font-size: 1rem;
+}
+
+.transaction-table th {
+  background-color: #12121a;
+  font-weight: 600;
+  color: #ccc;
+}
+
+.transaction-table tr:last-child td {
+  border-bottom: none;
 }
 
 .type-win {
-  color: #6fcf97;
+  color: #22c55e;
 }
 
 .type-loss {
-  color: #eb5757;
+  color: #ef4444;
 }
 
 .delete-btn {
-  background: transparent;
+  background: none;
+  color: #ef4444;
   border: none;
-  color: #ccc;
-  font-size: 1rem;
-  cursor: pointer;
-}
-
-.user-summary-title {
-  margin-top: 3rem;
   font-size: 1.2rem;
-  font-weight: bold;
+  cursor: pointer;
+  padding: 0;
 }
