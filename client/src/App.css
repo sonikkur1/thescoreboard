@@ -176,21 +176,28 @@ body {
 }
 
 .pagination button {
-  padding: 6px 12px;
-  border: 1px solid #ccc;
-  background: white;
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
   cursor: pointer;
-  border-radius: 4px;
+  backdrop-filter: blur(10px);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.pagination button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.08);
 }
 
 .pagination button.active {
-  background-color: #444;
-  color: white;
+  background-color: rgba(255, 255, 255, 0.2);
   font-weight: bold;
 }
 
 .pagination .gap {
-  padding: 6px 10px;
+  padding: 0.6rem 1.2rem;
   color: #999;
 }
-
