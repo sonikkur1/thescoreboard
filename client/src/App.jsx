@@ -177,8 +177,8 @@ function App() {
           {userStats().map((stat) => (
             <tr key={stat.user}>
               <td>{stat.user}</td>
-              <td className="type-win">{formatCurrency(stat.win)}</td>
-              <td className="type-loss">{formatCurrency(stat.loss)}</td>
+              <td>{formatCurrency(stat.win)}</td>
+              <td>{formatCurrency(stat.loss)}</td>
               <td>{formatCurrency(stat.total)}</td>
               <td>{stat.percentage}</td>
             </tr>
