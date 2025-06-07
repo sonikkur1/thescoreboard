@@ -15,26 +15,12 @@ function App() {
   const [category, setCategory] = useState('');
   const [user, setUser] = useState('Kevin');
   const [view, setView] = useState('select');
-  const [itemsPerPage, setItemsPerPage] = useState(7);
+  const ITEMS_PER_PAGE = 7;
   const [currentPage, setCurrentPage] = useState(1);
+
 
   useEffect(() => {
     fetchTransactions();
-  }, []);
-
-  useEffect(() => {
-    const updateItemsPerPage = () => {
-      const viewportHeight = window.innerHeight;
-      const reservedSpace = 440; // Adjust this based on your header, form, etc.
-      const rowHeight = 56; // Approx height of a table row (you can tweak this)
-      const availableSpace = viewportHeight - reservedSpace;
-      const rows = Math.floor(availableSpace / rowHeight);
-      setItemsPerPage(Math.max(1, rows));
-    };
-
-    updateItemsPerPage();
-    window.addEventListener('resize', updateItemsPerPage);
-    return () => window.removeEventListener('resize', updateItemsPerPage);
   }, []);
 
   const fetchTransactions = async () => {
@@ -104,12 +90,11 @@ function App() {
   };
 
   const filteredTransactions = filtered(category);
-    const totalPages = Math.ceil(filteredTransactions.length / itemsPerPage);
+    const totalPages = Math.ceil(filteredTransactions.length / ITEMS_PER_PAGE);
     const paginatedTransactions = filteredTransactions.slice(
-      (currentPage - 1) * itemsPerPage,
-      currentPage * itemsPerPage
+      (currentPage - 1) * ITEMS_PER_PAGE,
+      currentPage * ITEMS_PER_PAGE
     );
-
 
   return (
     <div className="app-container">
@@ -159,7 +144,7 @@ function App() {
             <th></th>
           </tr>
         </thead>
-        <tbody key={currentPage} className="fade-transition">
+        <tbody>
           {paginatedTransactions.map((tx) => (
             <tr key={tx._id}>
               <td>{tx.user}</td>
@@ -170,7 +155,7 @@ function App() {
               <td className={tx.type === 'win' ? 'type-win' : 'type-loss'}>
                 {tx.type === 'win' ? '+' : '-'}{formatCurrency(tx.amount)}
               </td>
-              <td>{formatDate(tx.createdAt)}</td>
+              <td>{formatDate(tx.createdAt)}</td> {/* Display Date */}
               <td>
                 <button className="delete-btn" onClick={() => handleDelete(tx._id)}>x</button>
               </td>
