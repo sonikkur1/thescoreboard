@@ -131,8 +131,8 @@ function App() {
             <th>Description</th>
             <th>Type</th>
             <th>Amount</th>
-            <th>Date</th> {/* New Column */}
-            <th></th> {/* Delete button column */}
+            <th>Date/Time</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -178,8 +178,8 @@ function App() {
               return (
                 <tr key={u}>
                   <td>{u}</td>
-                  <td className="type-win">{formatCurrency(winSum)}</td>
-                  <td className="type-loss">{formatCurrency(lossSum)}</td>
+                  <td>{formatCurrency(winSum)}</td>
+                  <td>{formatCurrency(lossSum)}</td>
                   <td>{formatCurrency(netTotal)}</td>
                   <td>{percentage}%</td>
                 </tr>
