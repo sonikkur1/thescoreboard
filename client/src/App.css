@@ -7,8 +7,13 @@ body {
 
 .app-container {
   max-width: 1000px;
-  margin: 2rem auto;
+  margin: 0 auto;
   padding: 1rem;
+  box-sizing: border-box;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .header-row {
@@ -125,11 +130,9 @@ body {
 }
 
 .transaction-table {
-  width: 100%;
-  border-collapse: collapse;
-  background-color: #1e1e2f;
-  border-radius: 12px;
-  overflow: hidden;
+  flex-grow: 1;
+  overflow-y: auto;
+  max-height: 100%;
 }
 
 .transaction-table th,
@@ -200,4 +203,19 @@ body {
 .pagination .gap {
   padding: 0.6rem 1.2rem;
   color: #999;
+}
+
+.fade-transition {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
