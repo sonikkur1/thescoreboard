@@ -18,6 +18,7 @@ body {
 .card {
   background: rgba(255, 255, 255, 0.05);
   padding: 2rem 4rem;
+  border-radius: 1rem;
   text-align: center;
   backdrop-filter: blur(10px);
   cursor: pointer;
@@ -30,17 +31,22 @@ body {
   background: rgba(255, 255, 255, 0.08);
 }
 
-.square {
-  border-radius: 0;
-}
-
 .card-summary {
   background: rgba(255, 255, 255, 0.05);
   padding: 1rem 2rem;
+  border-radius: 1rem;
   margin: 0.5rem;
   display: inline-block;
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.card-summary.win {
+  border-left: 4px solid #6fcf97;
+}
+
+.card-summary.loss {
+  border-left: 4px solid #eb5757;
 }
 
 .summary-panel {
@@ -55,6 +61,7 @@ body {
   color: white;
   padding: 0.5rem 1.2rem;
   border: none;
+  border-radius: 0.5rem;
   cursor: pointer;
   transition: background 0.3s ease;
 }
@@ -65,6 +72,12 @@ body {
 
 .view-title {
   margin-left: 1rem;
+}
+
+.header-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
 }
 
 .form-panel {
@@ -80,6 +93,7 @@ body {
   background: #222;
   color: white;
   border: 1px solid #444;
+  border-radius: 0.5rem;
 }
 
 .transaction-table {
@@ -113,4 +127,6 @@ body {
 
 .user-summary-title {
   margin-top: 3rem;
+  font-size: 1.2rem;
+  font-weight: bold;
 }
