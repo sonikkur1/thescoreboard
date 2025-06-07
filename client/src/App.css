@@ -1,9 +1,3 @@
-html, body {
-  height: 100%;
-  overflow-y: auto;
-  scroll-behavior: smooth;
-}
-
 body {
   margin: 0;
   overflow-y: scroll;
@@ -37,9 +31,12 @@ body {
 
 .app-container {
   max-width: 1000px;
-  margin: 2rem auto;
+  margin: 0 auto;
   padding: 1rem;
-  min-height: 100vh;
+  box-sizing: border-box;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .header-row {
