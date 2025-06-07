@@ -1,168 +1,116 @@
 body {
   margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #0a0f1c;
-  color: #eaeaea;
+  background-color: #111;
+  color: white;
+  font-family: 'Arial', sans-serif;
 }
 
 .app-container {
-  max-width: 1000px;
-  margin: 2rem auto;
-  padding: 1rem;
-}
-
-.header-row {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-.view-title {
-  font-size: 2rem;
-  font-weight: 600;
-  margin: 0;
+  padding: 2rem;
 }
 
 .selection-panel {
   display: flex;
   justify-content: center;
   gap: 2rem;
-  margin-top: 2rem;
 }
 
 .card {
-  background-color: rgba(255, 255, 255, 0.05);
-  padding: 3rem;
-  border-radius: 0px;
-  backdrop-filter: blur(12px);
-  cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  width: 200px;
-  height: 250px;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 2rem 4rem;
   text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+  transition: transform 0.3s ease, background 0.3s ease;
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .card:hover {
   transform: scale(1.05);
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.08);
 }
 
-.card h2 {
-  margin: 0;
-  font-size: 2rem;
-  color: #ffffff;
+.square {
+  border-radius: 0;
 }
 
-.card-btn {
-  background-color: rgba(255, 255, 255, 0.05);
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  padding: 0.6rem 1.2rem;
-  font-size: 1rem;
-  cursor: pointer;
+.card-summary {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 1rem 2rem;
+  margin: 0.5rem;
+  display: inline-block;
   backdrop-filter: blur(10px);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.card-btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.08);
-}
-
-.form-panel {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  background-color: #1e1e2f;
-  padding: 1rem;
-  border-radius: 12px;
-  margin-bottom: 1.5rem;
-}
-
-.form-panel input,
-.form-panel select {
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  border: none;
-  outline: none;
-  font-size: 1rem;
-  background-color: #2e2e3e;
-  color: #f5f5f5;
-  flex: 1;
-  min-width: 160px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .summary-panel {
   display: flex;
+  justify-content: start;
   gap: 1rem;
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
 }
 
-.card-summary {
-  flex: 1;
-  padding: 1rem;
-  border-radius: 0px;
-  background-color: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  font-size: 1.1rem;
-  color: #eaeaea;
-  text-align: center;
+.card-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  padding: 0.5rem 1.2rem;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease;
 }
 
-.card-summary.win {
-  color: #22c55e;
+.card-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
 }
 
-.card-summary.loss {
-  color: #ef4444;
+.view-title {
+  margin-left: 1rem;
+}
+
+.form-panel {
+  margin-bottom: 2rem;
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.form-panel input,
+.form-panel select {
+  padding: 0.5rem;
+  background: #222;
+  color: white;
+  border: 1px solid #444;
 }
 
 .transaction-table {
   width: 100%;
   border-collapse: collapse;
-  background-color: #1e1e2f;
-  border-radius: 12px;
-  overflow: hidden;
+  margin-top: 1rem;
 }
 
 .transaction-table th,
 .transaction-table td {
-  padding: 1rem;
+  padding: 0.75rem;
+  border-bottom: 1px solid #333;
   text-align: left;
-  border-bottom: 1px solid #2e2e3e;
-  font-size: 1rem;
-}
-
-.transaction-table th {
-  background-color: #12121a;
-  font-weight: 600;
-  color: #ccc;
-}
-
-.transaction-table tr:last-child td {
-  border-bottom: none;
 }
 
 .type-win {
-  color: #22c55e;
+  color: #6fcf97;
 }
 
 .type-loss {
-  color: #ef4444;
+  color: #eb5757;
 }
 
 .delete-btn {
-  background: none;
-  color: #ef4444;
+  background: transparent;
   border: none;
-  font-size: 1.2rem;
+  color: #ccc;
+  font-size: 1rem;
   cursor: pointer;
-  padding: 0;
+}
+
+.user-summary-title {
+  margin-top: 3rem;
 }
