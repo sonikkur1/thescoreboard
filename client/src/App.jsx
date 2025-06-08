@@ -15,6 +15,8 @@ function App() {
   const [category, setCategory] = useState('');
   const [user, setUser] = useState('Kevin');
   const [view, setView] = useState('select');
+  const [position, setPosition] = useState('LONG');
+  const [pair, setPair] = useState('BTC');
   const ITEMS_PER_PAGE = 7;
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -32,14 +34,17 @@ function App() {
   };
 
   const handleAdd = async () => {
-    if (!entry || !exit || !amount || !description || !category || !user) return;
+    if (!entry || !exit || !amount || !position || !pair || !user) return;
 
     const entryNum = parseFloat(entry);
     const exitNum = parseFloat(exit);
     const amountNum = parseFloat(amount);
-    const returnAmount = ((exitNum - entryNum) / entryNum) * amountNum;
-    const percentage = ((exitNum - entryNum) / entryNum) * 100;
-    const result = returnAmount >= 0 ? 'win' : 'loss';
+    const description = `${position} ${pair}`;
+
+    const isWin = position === 'LONG' ? exitNum > entryNum : exitNum < entryNum;
+    const returnAmount = ((exitNum - entryNum) / entryNum) * amountNum * (position === 'SHORT' ? -1 : 1);
+    const percentage = ((exitNum - entryNum) / entryNum) * 100 * (position === 'SHORT' ? -1 : 1);
+    const result = isWin ? 'win' : 'loss';
 
     const newTx = {
       entry: entryNum,
@@ -59,7 +64,8 @@ function App() {
       setEntry('');
       setExit('');
       setAmount('');
-      setDescription('');
+      setPosition('LONG');
+      setPair('BTC');
       setUser('Kevin');
     } catch (err) {
       console.error('Error adding transaction:', err);
@@ -133,12 +139,19 @@ function App() {
           <option value="Kevin">Kevin</option>
           <option value="Addison">Addison</option>
         </select>
-        <input
-          type="text"
-          placeholder="Description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
+
+        <select value={position} onChange={(e) => setPosition(e.target.value)}>
+          <option value="LONG">LONG</option>
+          <option value="SHORT">SHORT</option>
+        </select>
+
+        <select value={pair} onChange={(e) => setPair(e.target.value)}>
+          <option value="BTC">BTC</option>
+          <option value="LINK">LINK</option>
+          <option value="SOL">SOL</option>
+          <option value="XMR">XMR</option>
+        </select>
+
         <input
           type="number"
           placeholder="Entry"
@@ -159,6 +172,7 @@ function App() {
         />
         <button className="card-btn" onClick={handleAdd}>Add</button>
       </div>
+
 
       <table className="transaction-table">
         <thead>
