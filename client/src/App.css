@@ -315,6 +315,10 @@ body {
     text-align: center;
   }
 
+  .navbar-main-title {
+    display: none;
+  }
+
   .back-btn {
     align-self: flex-start;
     margin-bottom: 0.5rem;

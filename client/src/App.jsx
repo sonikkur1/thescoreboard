@@ -124,7 +124,8 @@ function App() {
       <div className="navbar">
         <button className="back-btn" onClick={() => setView('select')}>Back</button>
         <h1 className="navbar-title">
-          TradingBoard{view === 'Paper' ? ' Paper' : view === 'Fiat' ? ' Fiat' : ''}
+          <span className="navbar-main-title">TradingBoard</span>
+          {view === 'Paper' ? ' Paper' : view === 'Fiat' ? ' Fiat' : ''}
         </h1>
       </div>
 
