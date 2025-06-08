@@ -293,15 +293,15 @@ body {
   /* Fix selection cards to fit side-by-side */
   .selection-panel {
     flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
+    flex-wrap: nowrap;
+    justify-content: space-between;
     gap: 1rem;
   }
 
   .card {
-    width: 45vw;
-    height: 200px;
-    padding: 1rem;
+    width: 48%;
+    height: 180px;
+    padding: 1.5rem;
   }
 
   .card h2 {
